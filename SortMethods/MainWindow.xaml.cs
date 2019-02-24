@@ -23,10 +23,13 @@ namespace SortMethods
     public partial class MainWindow : Window
     {
         public List<GraphItem> allGraphItems = new List<GraphItem>();
+        public int[] masterArray = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 };
         public int maxBarHeight;
+        public int totalItems = 20;
         public int speed = 5;
         public int waitShort = 10;
         public int waitLong = 60;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -34,9 +37,9 @@ namespace SortMethods
             maxBarHeight = (int)rBar00.Height;
 
             ResetAllBarColors();
-            ShuffleValues();
+            ShuffleArray();
+            UpdateValues();
             UpdateAllBarHeights();
-
         }
 
         public void InitializeAllGraphItems()
@@ -63,32 +66,39 @@ namespace SortMethods
             allGraphItems.Add(new GraphItem(rBar19, lblItemIndex19, rIndexBackground19, lblItemValue19, rValueBackground19));
         }
 
-        public void ShuffleValues()
+        public void ShuffleArray()
         {
-            int[] shuffledArray = MyExtensions.ShuffledArray();
-            int count = allGraphItems.Count;
-            for (int i = 0; i < count; i++)
+            int n = masterArray.Length;
+            while (n > 1)
             {
-                allGraphItems[i]._itemValue.Content = shuffledArray[i];
+                n--;
+                int k = ThreadSafeRandom.ThisThreadsRandom.Next(n + 1);
+
+                if (k != n) //If k = n, bitwise swap would result in 0, so skip.
+                {
+                    masterArray[k] ^= masterArray[n];
+                    masterArray[n] ^= masterArray[k];
+                    masterArray[k] ^= masterArray[n];
+                }
             }
         }
 
         public void ReverseValues()
         {
-            int[] array = GetArrayFromGraph();
-            Array.Reverse(array);
-            int count = allGraphItems.Count;
-            for (int i = 0; i < count; i++)
+            Array.Reverse(masterArray);
+            int length = masterArray.Length;
+            for (int i = 0; i < length; i++)
             {
-                allGraphItems[i]._itemValue.Content = array[i];
+                allGraphItems[i]._itemValue.Content = masterArray[i];
             }
         }
 
         public void UpdateAllBarHeights()
         {
-            foreach (GraphItem x in allGraphItems)
+            int length = masterArray.Length;
+            for (int i = 0; i < length; i++)
             {
-                x._bar.Height = (int)x._itemValue.Content * (maxBarHeight / allGraphItems.Count);
+                allGraphItems[i]._bar.Height = masterArray[i] * (maxBarHeight / length);
             }
         }
 
@@ -100,35 +110,22 @@ namespace SortMethods
             }
         }
 
-        private void UpdateValues(int[] array)
+        private void UpdateValues()
         {
-            int count = allGraphItems.Count;
-            for (int i = 0; i < count; i++)
-            {
-                allGraphItems[i]._itemValue.Content = array[i];
-            }
-        }
-
-        private int[] GetArrayFromGraph()
-        {
-            int length = allGraphItems.Count;
-            int[] array = new int[length];
-
+            int length = masterArray.Length;
             for (int i = 0; i < length; i++)
             {
-                array[i] = (int)allGraphItems[i]._itemValue.Content;
+                allGraphItems[i]._itemValue.Content = masterArray[i];
             }
-
-            return array;
         }
 
         private void btnShuffle_Click(object sender, RoutedEventArgs e)
         {
-            ShuffleValues();
+            ShuffleArray();
+            UpdateValues();
             UpdateAllBarHeights();
             ResetAllBarColors();
         }
-
 
         private void btnReverse_Click(object sender, RoutedEventArgs e)
         {
@@ -142,19 +139,19 @@ namespace SortMethods
             Sorts newSort = new Sorts();
             switch (cbSelectSortType.SelectedValue)
             {
-                case SortType.SelectionSort:
-                    {
-                        SwitchTaskFactory(GraphicalSelectionSort);
-                        break;
-                    }
                 case SortType.InsertionSort:
                     {
                         SwitchTaskFactory(GraphicalInsertionSort);
                         break;
                     }
+                case SortType.SelectionSort:
+                    {
+                        //SwitchTaskFactory(GraphicalSelectionSort);
+                        break;
+                    }
                 case SortType.ShellSort:
                     {
-                        SwitchTaskFactory(GraphicalShellSort);
+                        //SwitchTaskFactory(GraphicalShellSort);
                         break;
                     }
                 default:
@@ -171,6 +168,7 @@ namespace SortMethods
                     {
                         btnRun.IsEnabled = false;
                         btnShuffle.IsEnabled = false;
+                        btnReverse.IsEnabled = false;
                     });
 
                     selectedSort();
@@ -179,6 +177,7 @@ namespace SortMethods
                     {
                         btnRun.IsEnabled = true;
                         btnShuffle.IsEnabled = true;
+                        btnReverse.IsEnabled = true;
                     });
                 });
             }
@@ -189,249 +188,229 @@ namespace SortMethods
 
         public void GraphicalInsertionSort()
         {
-            int length = allGraphItems.Count;
+            int length = masterArray.Length;
 
             for (int i = 0; i < length; i++)
             {
                 for (int j = i; j > 0; j--)
                 {
-                    int jValue = 50; //Dummy value
-                    int kValue = 50; //Dummy value
                     int k = j - 1;
 
                     Dispatcher.Invoke(() =>
                     {
                         allGraphItems[j].SetAllColors((Color)Application.Current.FindResource("ActiveItemColor1"));
                         allGraphItems[k].SetAllColors((Color)Application.Current.FindResource("ActiveItemColor2"));
-
-                        jValue = (int)allGraphItems[j]._itemValue.Content;
-                        kValue = (int)allGraphItems[k]._itemValue.Content;
                     });
 
                     Thread.Sleep(waitShort * speed);
 
-                    if (jValue < kValue)
+                    if (masterArray[j] < masterArray[k])
                     {
                         Thread.Sleep(waitShort * speed);
 
+                        masterArray[j] ^= masterArray[k];
+                        masterArray[k] ^= masterArray[j];
+                        masterArray[j] ^= masterArray[k];
+
                         Dispatcher.Invoke(() =>
                         {
-                            allGraphItems[j]._itemValue.Content = kValue;
                             allGraphItems[j].SetAllColors((Color)Application.Current.FindResource("ActiveItemColor2"));
-                            allGraphItems[j].UpdateBarHeight();
+                            allGraphItems[j].UpdateBarHeight(masterArray[j], maxBarHeight, totalItems);
+                            allGraphItems[j].UpdateValue(masterArray[j]);
 
-                            allGraphItems[k]._itemValue.Content = jValue;
                             allGraphItems[k].SetAllColors((Color)Application.Current.FindResource("ActiveItemColor1"));
-                            allGraphItems[k].UpdateBarHeight();
-
-
+                            allGraphItems[k].UpdateBarHeight(masterArray[k], maxBarHeight, totalItems);
+                            allGraphItems[k].UpdateValue(masterArray[k]);
                         });
 
                         Thread.Sleep(waitLong * speed);
 
-                        Dispatcher.Invoke(() =>
-                        {
-                            if ((int)allGraphItems[k]._itemValue.Content == k)
-                            {
-                                //If array[k] = k, color sorted
-                                allGraphItems[k].SetAllColors((Color)Application.Current.FindResource("SortedItemColor"));
-                            }
-                            else
-                            {
-                                //Set k to unsorted instead of active.
-                                allGraphItems[k].SetAllColors((Color)Application.Current.FindResource("UnsortedItemColor"));
-                            }
-
-                            if ((int)allGraphItems[j]._itemValue.Content == j)
-                            {
-                                //If array[j] = j, color sorted
-                                allGraphItems[j].SetAllColors((Color)Application.Current.FindResource("SortedItemColor"));
-                            }
-                            else
-                            {
-                                //Set j to unsorted instead of active.
-                                allGraphItems[j].SetAllColors((Color)Application.Current.FindResource("UnsortedItemColor"));
-                            }
-                        });
+                        FinalizeColors(k, j);
                     }
                     else
                     {
-                        Dispatcher.Invoke(() =>
-                        {
-                            if ((int)allGraphItems[k]._itemValue.Content == k)
-                            {
-                                //If array[k] = k, color sorted
-                                allGraphItems[k].SetAllColors((Color)Application.Current.FindResource("SortedItemColor"));
-                            }
-                            else
-                            {
-                                //Set k to unsorted instead of active.
-                                allGraphItems[k].SetAllColors((Color)Application.Current.FindResource("UnsortedItemColor"));
-                            }
-
-                            if ((int)allGraphItems[j]._itemValue.Content == j)
-                            {
-                                //If array[j] = j, color sorted
-                                allGraphItems[j].SetAllColors((Color)Application.Current.FindResource("SortedItemColor"));
-                            }
-                            else
-                            {
-                                //Set j to unsorted instead of active.
-                                allGraphItems[j].SetAllColors((Color)Application.Current.FindResource("UnsortedItemColor"));
-                            }
-                        });
+                        FinalizeColors(k, j);
                         break;
                     }
                 }
             }
-        }
 
-        public void GraphicalSelectionSort()
-        {
-            int length = allGraphItems.Count;
-
-            for (int i = 0; i < length; i++)
+            void FinalizeColors(int k, int j)
             {
-                int minimum = i;
-                for (int j = i + 1; j < length; j++)
-                {
-                    int iValue = 50; //Dummy value
-                    int jValue = 50; //Dummy value
-
-                    Dispatcher.Invoke(() =>
-                    {
-                        allGraphItems[i].SetAllColors((Color)Application.Current.FindResource("ActiveItemColor1"));
-                        allGraphItems[j].SetAllColors((Color)Application.Current.FindResource("ActiveItemColor2"));
-
-                        iValue = (int)allGraphItems[i]._itemValue.Content;
-                        jValue = (int)allGraphItems[j]._itemValue.Content;
-                    });
-
-                    Thread.Sleep(waitShort * speed);
-
-                    if (jValue < iValue)
-                    {
-                        Thread.Sleep(waitShort * speed);
-                        minimum = j;
-
-                        Dispatcher.Invoke(() =>
-                        {
-                            allGraphItems[i]._itemValue.Content = jValue;
-                            allGraphItems[i].SetAllColors((Color)Application.Current.FindResource("ActiveItemColor2"));
-                            allGraphItems[i].UpdateBarHeight();
-
-                            allGraphItems[j]._itemValue.Content = iValue;
-                            allGraphItems[j].SetAllColors((Color)Application.Current.FindResource("ActiveItemColor1"));
-                            allGraphItems[j].UpdateBarHeight();
-                        });
-
-                        Thread.Sleep(waitLong * speed);
-                    }
-
-                    Dispatcher.Invoke(() =>
-                    {
-                        //Set j to unsorted instead of active.
-                        allGraphItems[j].SetAllColors((Color)Application.Current.FindResource("UnsortedItemColor"));
-                    });
-                }
-
                 Dispatcher.Invoke(() =>
                 {
-                    if ((int)allGraphItems[i]._itemValue.Content == i)
+                    if (masterArray[k] == k)
                     {
-                        //If array[i] = i, color sorted
-                        allGraphItems[i].SetAllColors((Color)Application.Current.FindResource("SortedItemColor"));
+                        //If array[k] = k, color sorted
+                        allGraphItems[k].SetAllColors((Color)Application.Current.FindResource("SortedItemColor"));
                     }
                     else
                     {
-                        //Set i to unsorted instead of active.
-                        allGraphItems[i].SetAllColors((Color)Application.Current.FindResource("UnsortedItemColor"));
+                        //Set k to unsorted instead of active.
+                        allGraphItems[k].SetAllColors((Color)Application.Current.FindResource("UnsortedItemColor"));
+                    }
+
+                    if (masterArray[j] == j)
+                    {
+                        //If array[j] = j, color sorted
+                        allGraphItems[j].SetAllColors((Color)Application.Current.FindResource("SortedItemColor"));
+                    }
+                    else
+                    {
+                        //Set j to unsorted instead of active.
+                        allGraphItems[j].SetAllColors((Color)Application.Current.FindResource("UnsortedItemColor"));
                     }
                 });
             }
         }
 
-        public void GraphicalShellSort()
-        {
-            int length = allGraphItems.Count;
-            int step = 1;
-            //List<int> indexesInSet = new List<int>();
-            HashSet<int> indexesInSet = new HashSet<int>();
+        
+        //    public void GraphicalSelectionSort()
+        //    {
+        //        int length = allGraphItems.Count;
 
-            while (step < length / 3)
-            {
-                //Using Knuth's increment sequence (1, 4, 13, 40, ...)
-                step = 3 * step + 1;
-            }
+        //        for (int i = 0; i < length; i++)
+        //        {
+        //            int minimum = i;
+        //            for (int j = i + 1; j < length; j++)
+        //            {
+        //                int iValue = 50; //Dummy value
+        //                int jValue = 50; //Dummy value
 
-            while (step >= 1)
-            {
-                for (int i = step; i < length; i++)
-                {
-                    indexesInSet.Add(i);
-                    indexesInSet.Add(i - step);
+        //                Dispatcher.Invoke(() =>
+        //                {
+        //                    allGraphItems[i].SetAllColors((Color)Application.Current.FindResource("ActiveItemColor1"));
+        //                    allGraphItems[j].SetAllColors((Color)Application.Current.FindResource("ActiveItemColor2"));
 
-                    Dispatcher.Invoke(() =>
-                    {
-                        allGraphItems[i].SetAllColors((Color)Application.Current.FindResource("ActiveItemColor1"));
-                        allGraphItems[i - step].SetAllColors((Color)Application.Current.FindResource("ActiveItemColor2"));
-                    });
+        //                    iValue = (int)allGraphItems[i]._itemValue.Content;
+        //                    jValue = (int)allGraphItems[j]._itemValue.Content;
+        //                });
 
-                    Thread.Sleep(waitShort * speed);
-                    for (int j = i; j >= step && jIsLess(j); j -= step)
-                    {
-                        indexesInSet.Add(j - step);
+        //                Thread.Sleep(waitShort * speed);
 
-                        //If not in order swap colors and values
-                        Dispatcher.Invoke(() =>
-                        {
-                            int temp = (int)allGraphItems[j - step]._itemValue.Content;
+        //                if (jValue < iValue)
+        //                {
+        //                    Thread.Sleep(waitShort * speed);
+        //                    minimum = j;
 
-                            allGraphItems[j - step]._itemValue.Content = allGraphItems[j]._itemValue.Content;
-                            allGraphItems[j - step].SetAllColors((Color)Application.Current.FindResource("ActiveItemColor2"));
-                            allGraphItems[j - step].UpdateBarHeight();
+        //                    Dispatcher.Invoke(() =>
+        //                    {
+        //                        allGraphItems[i]._itemValue.Content = jValue;
+        //                        allGraphItems[i].SetAllColors((Color)Application.Current.FindResource("ActiveItemColor2"));
+        //                        allGraphItems[i].UpdateBarHeight();
 
-                            allGraphItems[j]._itemValue.Content = temp;
-                            allGraphItems[j].SetAllColors((Color)Application.Current.FindResource("ActiveItemColor1"));
-                            allGraphItems[j].UpdateBarHeight();
-                        });
-                        Thread.Sleep(waitLong * speed);
-                    }
+        //                        allGraphItems[j]._itemValue.Content = iValue;
+        //                        allGraphItems[j].SetAllColors((Color)Application.Current.FindResource("ActiveItemColor1"));
+        //                        allGraphItems[j].UpdateBarHeight();
+        //                    });
 
-                    //Reset colors for all examined indexes
-                    Dispatcher.Invoke(() =>
-                    {
-                        foreach (int x in indexesInSet)
-                        {
-                            if ((int)allGraphItems[x]._itemValue.Content == x)
-                            {
-                                allGraphItems[x].SetAllColors((Color)Application.Current.FindResource("SortedItemColor"));
-                            }
-                            else
-                            {
-                                allGraphItems[x].SetAllColors((Color)Application.Current.FindResource("UnsortedItemColor"));
-                            }
-                        }
-                    });
-                    indexesInSet.Clear();
-                }
-                step /= 3;
-            }
+        //                    Thread.Sleep(waitLong * speed);
+        //                }
 
-            bool jIsLess(int j)
-            {
-                int iValue = 50; //Dummy value
-                int jValue = 50; //Dummy value
+        //                Dispatcher.Invoke(() =>
+        //                {
+        //                    //Set j to unsorted instead of active.
+        //                    allGraphItems[j].SetAllColors((Color)Application.Current.FindResource("UnsortedItemColor"));
+        //                });
+        //            }
 
-                Dispatcher.Invoke(() =>
-                {
-                    iValue = (int)allGraphItems[j - step]._itemValue.Content;
-                    jValue = (int)allGraphItems[j]._itemValue.Content;
-                });
+        //            Dispatcher.Invoke(() =>
+        //            {
+        //                if ((int)allGraphItems[i]._itemValue.Content == i)
+        //                {
+        //                    //If array[i] = i, color sorted
+        //                    allGraphItems[i].SetAllColors((Color)Application.Current.FindResource("SortedItemColor"));
+        //                }
+        //                else
+        //                {
+        //                    //Set i to unsorted instead of active.
+        //                    allGraphItems[i].SetAllColors((Color)Application.Current.FindResource("UnsortedItemColor"));
+        //                }
+        //            });
+        //        }
+        //    }
 
-                return jValue < iValue;
-            }
-        }
+        //    public void GraphicalShellSort()
+        //    {
+        //        int length = allGraphItems.Count;
+        //        int step = 1;
+        //        //List<int> indexesInSet = new List<int>();
+        //        HashSet<int> indexesInSet = new HashSet<int>();
+
+        //        while (step < length / 3)
+        //        {
+        //            //Using Knuth's increment sequence (1, 4, 13, 40, ...)
+        //            step = 3 * step + 1;
+        //        }
+
+        //        while (step >= 1)
+        //        {
+        //            for (int i = step; i < length; i++)
+        //            {
+        //                indexesInSet.Add(i);
+        //                indexesInSet.Add(i - step);
+
+        //                Dispatcher.Invoke(() =>
+        //                {
+        //                    allGraphItems[i].SetAllColors((Color)Application.Current.FindResource("ActiveItemColor1"));
+        //                    allGraphItems[i - step].SetAllColors((Color)Application.Current.FindResource("ActiveItemColor2"));
+        //                });
+
+        //                Thread.Sleep(waitShort * speed);
+        //                for (int j = i; j >= step && jIsLess(j); j -= step)
+        //                {
+        //                    indexesInSet.Add(j - step);
+
+        //                    //If not in order swap colors and values
+        //                    Dispatcher.Invoke(() =>
+        //                    {
+        //                        int temp = (int)allGraphItems[j - step]._itemValue.Content;
+
+        //                        allGraphItems[j - step]._itemValue.Content = allGraphItems[j]._itemValue.Content;
+        //                        allGraphItems[j - step].SetAllColors((Color)Application.Current.FindResource("ActiveItemColor2"));
+        //                        allGraphItems[j - step].UpdateBarHeight();
+
+        //                        allGraphItems[j]._itemValue.Content = temp;
+        //                        allGraphItems[j].SetAllColors((Color)Application.Current.FindResource("ActiveItemColor1"));
+        //                        allGraphItems[j].UpdateBarHeight();
+        //                    });
+        //                    Thread.Sleep(waitLong * speed);
+        //                }
+
+        //                //Reset colors for all examined indexes
+        //                Dispatcher.Invoke(() =>
+        //                {
+        //                    foreach (int x in indexesInSet)
+        //                    {
+        //                        if ((int)allGraphItems[x]._itemValue.Content == x)
+        //                        {
+        //                            allGraphItems[x].SetAllColors((Color)Application.Current.FindResource("SortedItemColor"));
+        //                        }
+        //                        else
+        //                        {
+        //                            allGraphItems[x].SetAllColors((Color)Application.Current.FindResource("UnsortedItemColor"));
+        //                        }
+        //                    }
+        //                });
+        //                indexesInSet.Clear();
+        //            }
+        //            step /= 3;
+        //        }
+
+        //        bool jIsLess(int j)
+        //        {
+        //            int iValue = 50; //Dummy value
+        //            int jValue = 50; //Dummy value
+
+        //            Dispatcher.Invoke(() =>
+        //            {
+        //                iValue = (int)allGraphItems[j - step]._itemValue.Content;
+        //                jValue = (int)allGraphItems[j]._itemValue.Content;
+        //            });
+
+        //            return jValue < iValue;
+        //        }
+        //    }
 
         #endregion
 
@@ -448,26 +427,6 @@ namespace SortMethods
         public static Random ThisThreadsRandom
         {
             get { return Local ?? (Local = new Random(unchecked(Environment.TickCount * 31 + Thread.CurrentThread.ManagedThreadId))); }
-        }
-    }
-
-    static class MyExtensions
-    {
-        public static int[] ShuffledArray()
-        {
-            int[] newArray = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 };
-            int n = 20;
-            while (n > 1)
-            {
-                n--;
-                int k = ThreadSafeRandom.ThisThreadsRandom.Next(n + 1);
-
-                int x = newArray[k];
-                newArray[k] = newArray[n];
-                newArray[n] = x;
-            }
-
-            return newArray;
         }
     }
 }

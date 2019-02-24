@@ -37,9 +37,14 @@ namespace SortMethods
             _valueBackground.Fill = brush;
         }
 
-        public void UpdateBarHeight()
+        public void UpdateBarHeight(int newHeight, int maxHeight, int totalItems)
         {
-            _bar.Height = (int)_itemValue.Content * (400 / 20);
+            _bar.Height = newHeight * (maxHeight / totalItems);
+        }
+
+        public void UpdateValue(int newValue)
+        {
+            _itemValue.Content = newValue;
         }
     }
 }
