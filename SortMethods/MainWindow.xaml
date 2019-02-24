@@ -1,0 +1,509 @@
+﻿<Window x:Class="SortMethods.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SortMethods"
+        mc:Ignorable="d"
+        Title="MainWindow" Background="Bisque" Width="800" Height="565" MinWidth="800" MinHeight="565" ResizeMode="CanResizeWithGrip">
+    <Window.Resources>
+        <ObjectDataProvider MethodName="GetValues"
+                        ObjectType="{x:Type local:SortType}"
+                        x:Key="sortMethodsFromEnum">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="local:SortType" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </Window.Resources>
+    <Grid x:Name="grdOuterBounds">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Rectangle Fill="#FFB8682F"></Rectangle>
+        <Viewbox x:Name="vbTitle" Margin="0" Stretch="Uniform">
+            <Label x:Name="lblTitle" Content="SORT VISUALIZER" FontFamily="Ink Free" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">
+                <Label.Effect>
+                    <DropShadowEffect BlurRadius="2" ShadowDepth="1" Color="#FFA0531C"/>
+                </Label.Effect>
+            </Label>
+        </Viewbox>
+        <Viewbox x:Name="vbBody" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20" Grid.Row="1">
+            <Grid x:Name="gridInnerBounds" HorizontalAlignment="Center" VerticalAlignment="Center" Background="Beige" MinWidth="800" MinHeight="460">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Button x:Name="btnShuffle" Content="Shuffle" HorizontalAlignment="Center" VerticalAlignment="Top" Width="75" Click="btnShuffle_Click">
+                    <Button.Background>
+                        <SolidColorBrush Color="{DynamicResource UnvisitedItemColor}"/>
+                    </Button.Background>
+                </Button>
+                <Slider x:Name="sldrSpeed" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,0,0,0" Width="200" ValueChanged="sldrSpeed_ValueChanged" SmallChange="0" Maximum="12" IsDirectionReversed="True" Value="10" TickPlacement="BottomRight" ToolTip="Speed" IsSnapToTickEnabled="True" Foreground="Black" Background="Transparent"/>
+                <Button x:Name="btnRun" Content="Run" HorizontalAlignment="Right" Margin="0" VerticalAlignment="Top" Width="75" Height="20" Click="btnRun_Click">
+                    <Button.Background>
+                        <SolidColorBrush Color="{DynamicResource UnvisitedItemColor}"/>
+                    </Button.Background>
+                </Button>
+                <ComboBox x:Name="cbSelectSortType" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" ItemsSource="{Binding Source={StaticResource sortMethodsFromEnum}}" SelectedIndex="0"/>
+                <Grid x:Name="gridGraphItems" Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="400"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!--Position 00-->
+                    <Rectangle x:Name="rBar00" Grid.Column="1" VerticalAlignment="Bottom" Height="400" Width="20" HorizontalAlignment="Center">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <Label x:Name="lblItemIndex00" Content="0" Grid.Row="1" Grid.Column="1" FontWeight="Bold" FontFamily="Segoe UI Black" Padding="0" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Panel.ZIndex="10"/>
+                    <Rectangle x:Name="rIndexBackground00" Grid.Row="1" Grid.Column="1">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <Label x:Name="lblItemValue00" Content="0" Grid.Row="2" Grid.Column="1" FontWeight="Bold" FontFamily="Segoe UI Black" Padding="0" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Panel.ZIndex="10"/>
+                    <Rectangle x:Name="rValueBackground00" Grid.Row="2" Grid.Column="1">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <!--Position 01-->
+                    <Rectangle x:Name="rBar01" Grid.Column="2" VerticalAlignment="Bottom" Height="400" Width="20" HorizontalAlignment="Center">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <Label x:Name="lblItemIndex01" Content="1" Grid.Row="1" Grid.Column="2" FontWeight="Bold" FontFamily="Segoe UI Black" Padding="0" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Panel.ZIndex="10"/>
+                    <Rectangle x:Name="rIndexBackground01" Grid.Row="1" Grid.Column="2">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <Label x:Name="lblItemValue01" Content="0" Grid.Row="2" Grid.Column="2" FontWeight="Bold" FontFamily="Segoe UI Black" Padding="0" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Panel.ZIndex="10"/>
+                    <Rectangle x:Name="rValueBackground01" Grid.Row="2" Grid.Column="2">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <!--Position 02-->
+                    <Rectangle x:Name="rBar02" Grid.Column="3" VerticalAlignment="Bottom" Height="400" Width="20" HorizontalAlignment="Center">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <Label x:Name="lblItemIndex02" Content="2" Grid.Row="1" Grid.Column="3" FontWeight="Bold" FontFamily="Segoe UI Black" Padding="0" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Panel.ZIndex="10"/>
+                    <Rectangle x:Name="rIndexBackground02" Grid.Row="1" Grid.Column="3">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <Label x:Name="lblItemValue02" Content="0" Grid.Row="2" Grid.Column="3" FontWeight="Bold" FontFamily="Segoe UI Black" Padding="0" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Panel.ZIndex="10"/>
+                    <Rectangle x:Name="rValueBackground02" Grid.Row="2" Grid.Column="3">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <!--Position 03-->
+                    <Rectangle x:Name="rBar03" Grid.Column="4" VerticalAlignment="Bottom" Height="400" Width="20" HorizontalAlignment="Center">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <Label x:Name="lblItemIndex03" Content="3" Grid.Row="1" Grid.Column="4" FontWeight="Bold" FontFamily="Segoe UI Black" Padding="0" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Panel.ZIndex="10"/>
+                    <Rectangle x:Name="rIndexBackground03" Grid.Row="1" Grid.Column="4">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <Label x:Name="lblItemValue03" Content="0" Grid.Row="2" Grid.Column="4" FontWeight="Bold" FontFamily="Segoe UI Black" Padding="0" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Panel.ZIndex="10"/>
+                    <Rectangle x:Name="rValueBackground03" Grid.Row="2" Grid.Column="4">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <!--Position 04-->
+                    <Rectangle x:Name="rBar04" Grid.Column="5" VerticalAlignment="Bottom" Height="400" Width="20" HorizontalAlignment="Center">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <Label x:Name="lblItemIndex04" Content="4" Grid.Row="1" Grid.Column="5" FontWeight="Bold" FontFamily="Segoe UI Black" Padding="0" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Panel.ZIndex="10"/>
+                    <Rectangle x:Name="rIndexBackground04" Grid.Row="1" Grid.Column="5">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <Label x:Name="lblItemValue04" Content="0" Grid.Row="2" Grid.Column="5" FontWeight="Bold" FontFamily="Segoe UI Black" Padding="0" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Panel.ZIndex="10"/>
+                    <Rectangle x:Name="rValueBackground04" Grid.Row="2" Grid.Column="5">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <!--Position 05-->
+                    <Rectangle x:Name="rBar05" Grid.Column="6" VerticalAlignment="Bottom" Height="400" Width="20" HorizontalAlignment="Center">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <Label x:Name="lblItemIndex05" Content="5" Grid.Row="1" Grid.Column="6" FontWeight="Bold" FontFamily="Segoe UI Black" Padding="0" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Panel.ZIndex="10"/>
+                    <Rectangle x:Name="rIndexBackground05" Grid.Row="1" Grid.Column="6">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <Label x:Name="lblItemValue05" Content="0" Grid.Row="2" Grid.Column="6" FontWeight="Bold" FontFamily="Segoe UI Black" Padding="0" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Panel.ZIndex="10"/>
+                    <Rectangle x:Name="rValueBackground05" Grid.Row="2" Grid.Column="6">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <!--Position 06-->
+                    <Rectangle x:Name="rBar06" Grid.Column="7" VerticalAlignment="Bottom" Height="400" Width="20" HorizontalAlignment="Center">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <Label x:Name="lblItemIndex06" Content="6" Grid.Row="1" Grid.Column="7" FontWeight="Bold" FontFamily="Segoe UI Black" Padding="0" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Panel.ZIndex="10"/>
+                    <Rectangle x:Name="rIndexBackground06" Grid.Row="1" Grid.Column="7">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <Label x:Name="lblItemValue06" Content="0" Grid.Row="2" Grid.Column="7" FontWeight="Bold" FontFamily="Segoe UI Black" Padding="0" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Panel.ZIndex="10"/>
+                    <Rectangle x:Name="rValueBackground06" Grid.Row="2" Grid.Column="7">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <!--Position 07-->
+                    <Rectangle x:Name="rBar07" Grid.Column="8" VerticalAlignment="Bottom" Height="400" Width="20" HorizontalAlignment="Center">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <Label x:Name="lblItemIndex07" Content="7" Grid.Row="1" Grid.Column="8" FontWeight="Bold" FontFamily="Segoe UI Black" Padding="0" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Panel.ZIndex="10"/>
+                    <Rectangle x:Name="rIndexBackground07" Grid.Row="1" Grid.Column="8">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <Label x:Name="lblItemValue07" Content="0" Grid.Row="2" Grid.Column="8" FontWeight="Bold" FontFamily="Segoe UI Black" Padding="0" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Panel.ZIndex="10"/>
+                    <Rectangle x:Name="rValueBackground07" Grid.Row="2" Grid.Column="8">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <!--Position 08-->
+                    <Rectangle x:Name="rBar08" Grid.Column="9" VerticalAlignment="Bottom" Height="400" Width="20" HorizontalAlignment="Center">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <Label x:Name="lblItemIndex08" Content="8" Grid.Row="1" Grid.Column="9" FontWeight="Bold" FontFamily="Segoe UI Black" Padding="0" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Panel.ZIndex="10"/>
+                    <Rectangle x:Name="rIndexBackground08" Grid.Row="1" Grid.Column="9">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <Label x:Name="lblItemValue08" Content="0" Grid.Row="2" Grid.Column="9" FontWeight="Bold" FontFamily="Segoe UI Black" Padding="0" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Panel.ZIndex="10"/>
+                    <Rectangle x:Name="rValueBackground08" Grid.Row="2" Grid.Column="9">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <!--Position 09-->
+                    <Rectangle x:Name="rBar09" Grid.Column="10" VerticalAlignment="Bottom" Height="400" Width="20" HorizontalAlignment="Center">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <Label x:Name="lblItemIndex09" Content="9" Grid.Row="1" Grid.Column="10" FontWeight="Bold" FontFamily="Segoe UI Black" Padding="0" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Panel.ZIndex="10"/>
+                    <Rectangle x:Name="rIndexBackground09" Grid.Row="1" Grid.Column="10">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <Label x:Name="lblItemValue09" Content="0" Grid.Row="2" Grid.Column="10" FontWeight="Bold" FontFamily="Segoe UI Black" Padding="0" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Panel.ZIndex="10"/>
+                    <Rectangle x:Name="rValueBackground09" Grid.Row="2" Grid.Column="10">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <!--Position 10-->
+                    <Rectangle x:Name="rBar10" Grid.Column="11" VerticalAlignment="Bottom" Height="400" Width="20" HorizontalAlignment="Center">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <Label x:Name="lblItemIndex10" Content="10" Grid.Row="1" Grid.Column="11" FontWeight="Bold" FontFamily="Segoe UI Black" Padding="0" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Panel.ZIndex="10"/>
+                    <Rectangle x:Name="rIndexBackground10" Grid.Row="1" Grid.Column="11">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <Label x:Name="lblItemValue10" Content="0" Grid.Row="2" Grid.Column="11" FontWeight="Bold" FontFamily="Segoe UI Black" Padding="0" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Panel.ZIndex="10"/>
+                    <Rectangle x:Name="rValueBackground10" Grid.Row="2" Grid.Column="11">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <!--Position 11-->
+                    <Rectangle x:Name="rBar11" Grid.Column="12" VerticalAlignment="Bottom" Height="400" Width="20" HorizontalAlignment="Center">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <Label x:Name="lblItemIndex11" Content="11" Grid.Row="1" Grid.Column="12" FontWeight="Bold" FontFamily="Segoe UI Black" Padding="0" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Panel.ZIndex="10"/>
+                    <Rectangle x:Name="rIndexBackground11" Grid.Row="1" Grid.Column="12">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <Label x:Name="lblItemValue11" Content="0" Grid.Row="2" Grid.Column="12" FontWeight="Bold" FontFamily="Segoe UI Black" Padding="0" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Panel.ZIndex="10"/>
+                    <Rectangle x:Name="rValueBackground11" Grid.Row="2" Grid.Column="12">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <!--Position 12-->
+                    <Rectangle x:Name="rBar12" Grid.Column="13" VerticalAlignment="Bottom" Height="400" Width="20" HorizontalAlignment="Center">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <Label x:Name="lblItemIndex12" Content="12" Grid.Row="1" Grid.Column="13" FontWeight="Bold" FontFamily="Segoe UI Black" Padding="0" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Panel.ZIndex="10"/>
+                    <Rectangle x:Name="rIndexBackground12" Grid.Row="1" Grid.Column="13">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <Label x:Name="lblItemValue12" Content="0" Grid.Row="2" Grid.Column="13" FontWeight="Bold" FontFamily="Segoe UI Black" Padding="0" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Panel.ZIndex="10"/>
+                    <Rectangle x:Name="rValueBackground12" Grid.Row="2" Grid.Column="13">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <!--Position 13-->
+                    <Rectangle x:Name="rBar13" Grid.Column="14" VerticalAlignment="Bottom" Height="400" Width="20" HorizontalAlignment="Center">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <Label x:Name="lblItemIndex13" Content="13" Grid.Row="1" Grid.Column="14" FontWeight="Bold" FontFamily="Segoe UI Black" Padding="0" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Panel.ZIndex="10"/>
+                    <Rectangle x:Name="rIndexBackground13" Grid.Row="1" Grid.Column="14">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <Label x:Name="lblItemValue13" Content="0" Grid.Row="2" Grid.Column="14" FontWeight="Bold" FontFamily="Segoe UI Black" Padding="0" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Panel.ZIndex="10"/>
+                    <Rectangle x:Name="rValueBackground13" Grid.Row="2" Grid.Column="14">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <!--Position 14-->
+                    <Rectangle x:Name="rBar14" Grid.Column="15" VerticalAlignment="Bottom" Height="400" Width="20" HorizontalAlignment="Center">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <Label x:Name="lblItemIndex14" Content="14" Grid.Row="1" Grid.Column="15" FontWeight="Bold" FontFamily="Segoe UI Black" Padding="0" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Panel.ZIndex="10"/>
+                    <Rectangle x:Name="rIndexBackground14" Grid.Row="1" Grid.Column="15">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <Label x:Name="lblItemValue14" Content="0" Grid.Row="2" Grid.Column="15" FontWeight="Bold" FontFamily="Segoe UI Black" Padding="0" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Panel.ZIndex="10"/>
+                    <Rectangle x:Name="rValueBackground14" Grid.Row="2" Grid.Column="15">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <!--Position 15-->
+                    <Rectangle x:Name="rBar15" Grid.Column="16" VerticalAlignment="Bottom" Height="400" Width="20" HorizontalAlignment="Center">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <Label x:Name="lblItemIndex15" Content="15" Grid.Row="1" Grid.Column="16" FontWeight="Bold" FontFamily="Segoe UI Black" Padding="0" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Panel.ZIndex="10"/>
+                    <Rectangle x:Name="rIndexBackground15" Grid.Row="1" Grid.Column="16">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <Label x:Name="lblItemValue15" Content="0" Grid.Row="2" Grid.Column="16" FontWeight="Bold" FontFamily="Segoe UI Black" Padding="0" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Panel.ZIndex="10"/>
+                    <Rectangle x:Name="rValueBackground15" Grid.Row="2" Grid.Column="16">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <!--Position 16-->
+                    <Rectangle x:Name="rBar16" Grid.Column="17" VerticalAlignment="Bottom" Height="400" Width="20" HorizontalAlignment="Center">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource ActiveItemColor1}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <Label x:Name="lblItemIndex16" Content="16" Grid.Row="1" Grid.Column="17" FontWeight="Bold" FontFamily="Segoe UI Black" Padding="0" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Panel.ZIndex="10"/>
+                    <Rectangle x:Name="rIndexBackground16" Grid.Row="1" Grid.Column="17">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <Label x:Name="lblItemValue16" Content="0" Grid.Row="2" Grid.Column="17" FontWeight="Bold" FontFamily="Segoe UI Black" Padding="0" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Panel.ZIndex="10"/>
+                    <Rectangle x:Name="rValueBackground16" Grid.Row="2" Grid.Column="17">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <!--Position 17-->
+                    <Rectangle x:Name="rBar17" Grid.Column="18" VerticalAlignment="Bottom" Height="400" Width="20" HorizontalAlignment="Center">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource ActiveItemColor2}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <Label x:Name="lblItemIndex17" Content="17" Grid.Row="1" Grid.Column="18" FontWeight="Bold" FontFamily="Segoe UI Black" Padding="0" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Panel.ZIndex="10"/>
+                    <Rectangle x:Name="rIndexBackground17" Grid.Row="1" Grid.Column="18">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <Label x:Name="lblItemValue17" Content="0" Grid.Row="2" Grid.Column="18" FontWeight="Bold" FontFamily="Segoe UI Black" Padding="0" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Panel.ZIndex="10"/>
+                    <Rectangle x:Name="rValueBackground17" Grid.Row="2" Grid.Column="18">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <!--Position 18-->
+                    <Rectangle x:Name="rBar18" Grid.Column="19" VerticalAlignment="Bottom" Height="400" Width="20" HorizontalAlignment="Center">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource UnsortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <Label x:Name="lblItemIndex18" Content="18" Grid.Row="1" Grid.Column="19" FontWeight="Bold" FontFamily="Segoe UI Black" Padding="0" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Panel.ZIndex="10"/>
+                    <Rectangle x:Name="rIndexBackground18" Grid.Row="1" Grid.Column="19">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <Label x:Name="lblItemValue18" Content="0" Grid.Row="2" Grid.Column="19" FontWeight="Bold" FontFamily="Segoe UI Black" Padding="0" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Panel.ZIndex="10"/>
+                    <Rectangle x:Name="rValueBackground18" Grid.Row="2" Grid.Column="19">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <!--Position 19-->
+                    <Rectangle x:Name="rBar19" Grid.Column="20" VerticalAlignment="Bottom" Height="400" Width="20" HorizontalAlignment="Center">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="#FFDED8C9"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <Label x:Name="lblItemIndex19" Content="19" Grid.Row="1" Grid.Column="20" FontWeight="Bold" FontFamily="Segoe UI Black" Padding="0" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Panel.ZIndex="10"/>
+                    <Rectangle x:Name="rIndexBackground19" Grid.Row="1" Grid.Column="20">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <Label x:Name="lblItemValue19" Content="0" Grid.Row="2" Grid.Column="20" FontWeight="Bold" FontFamily="Segoe UI Black" Padding="0" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Panel.ZIndex="10"/>
+                    <Rectangle x:Name="rValueBackground19" Grid.Row="2" Grid.Column="20">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{DynamicResource SortedItemColor}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                </Grid>
+                <Button x:Name="btnReverse" Content="Reverse" HorizontalAlignment="Center" VerticalAlignment="Top" Width="75" Click="btnReverse_Click" Margin="283,0,442,0">
+                    <Button.Background>
+                        <SolidColorBrush Color="{DynamicResource UnvisitedItemColor}"/>
+                    </Button.Background>
+                </Button>
+            </Grid>
+        </Viewbox>
+    </Grid>
+</Window>

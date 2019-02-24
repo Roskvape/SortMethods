@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2035
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SortMethods", "SortMethods\SortMethods.csproj", "{969ECD6D-33EA-470D-A9BF-7A01FB48EAF9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{969ECD6D-33EA-470D-A9BF-7A01FB48EAF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{969ECD6D-33EA-470D-A9BF-7A01FB48EAF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{969ECD6D-33EA-470D-A9BF-7A01FB48EAF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{969ECD6D-33EA-470D-A9BF-7A01FB48EAF9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {605B3452-0654-4156-93B7-9995754AF2E3}
+	EndGlobalSection
+EndGlobal

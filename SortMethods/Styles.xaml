@@ -1,0 +1,9 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:SortMethods">
+    <Color x:Key="SortedItemColor">#FF59A6B8</Color>
+    <Color x:Key="UnsortedItemColor">#FFB8682F</Color>
+    <Color x:Key="UnvisitedItemColor">#FFDED8C9</Color>
+    <Color x:Key="ActiveItemColor1">#FFF9DF97</Color>
+    <Color x:Key="ActiveItemColor2">#FFE2A80C</Color>
+</ResourceDictionary>
