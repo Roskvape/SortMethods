@@ -25,7 +25,7 @@ namespace SortMethods
         public List<GraphItem> allGraphItems = new List<GraphItem>();
         public int[] masterArray = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 };
         public int maxBarHeight;
-        public int totalItems = 20;
+        public int totalItems;
         public int speed = 5;
         public int waitShort = 10;
         public int waitLong = 60;
@@ -35,6 +35,7 @@ namespace SortMethods
             InitializeComponent();
             InitializeAllGraphItems();
             maxBarHeight = (int)rBar00.Height;
+            totalItems = masterArray.Length;
 
             ResetAllBarColors();
             ShuffleArray();
@@ -136,7 +137,7 @@ namespace SortMethods
 
         public void btnRun_Click(object sender, RoutedEventArgs e)
         {
-            Sorts newSort = new Sorts();
+            Sorts newSort = new Sorts(); //For debugging
             switch (cbSelectSortType.SelectedValue)
             {
                 case SortType.InsertionSort:
@@ -144,14 +145,35 @@ namespace SortMethods
                         SwitchTaskFactory(GraphicalInsertionSort);
                         break;
                     }
+                //case SortType.MergeSort:
+                //    {
+                //        int[] newArray = newSort.MergeSort(masterArray);
+
+                //        string s = "";
+                //        foreach (var item in masterArray)
+                //        {
+                //            s += $"{item}\n";
+                //        }
+                //        MessageBox.Show(s);
+
+
+                //        string s2 = "";
+                //        foreach (var item in newArray)
+                //        {
+                //            s2 += $"{item}\n";
+                //        }
+                //        MessageBox.Show(s2);
+
+                //        break;
+                //    }
                 case SortType.SelectionSort:
                     {
-                        //SwitchTaskFactory(GraphicalSelectionSort);
+                        SwitchTaskFactory(GraphicalSelectionSort);
                         break;
                     }
                 case SortType.ShellSort:
                     {
-                        //SwitchTaskFactory(GraphicalShellSort);
+                        SwitchTaskFactory(GraphicalShellSort);
                         break;
                     }
                 default:
@@ -212,16 +234,7 @@ namespace SortMethods
                         masterArray[k] ^= masterArray[j];
                         masterArray[j] ^= masterArray[k];
 
-                        Dispatcher.Invoke(() =>
-                        {
-                            allGraphItems[j].SetAllColors((Color)Application.Current.FindResource("ActiveItemColor2"));
-                            allGraphItems[j].UpdateBarHeight(masterArray[j], maxBarHeight, totalItems);
-                            allGraphItems[j].UpdateValue(masterArray[j]);
-
-                            allGraphItems[k].SetAllColors((Color)Application.Current.FindResource("ActiveItemColor1"));
-                            allGraphItems[k].UpdateBarHeight(masterArray[k], maxBarHeight, totalItems);
-                            allGraphItems[k].UpdateValue(masterArray[k]);
-                        });
+                        SwapForUI(j, k);
 
                         Thread.Sleep(waitLong * speed);
 
@@ -264,154 +277,150 @@ namespace SortMethods
             }
         }
 
-        
-        //    public void GraphicalSelectionSort()
-        //    {
-        //        int length = allGraphItems.Count;
 
-        //        for (int i = 0; i < length; i++)
-        //        {
-        //            int minimum = i;
-        //            for (int j = i + 1; j < length; j++)
-        //            {
-        //                int iValue = 50; //Dummy value
-        //                int jValue = 50; //Dummy value
+        public void GraphicalSelectionSort()
+        {
+            int length = masterArray.Length;
 
-        //                Dispatcher.Invoke(() =>
-        //                {
-        //                    allGraphItems[i].SetAllColors((Color)Application.Current.FindResource("ActiveItemColor1"));
-        //                    allGraphItems[j].SetAllColors((Color)Application.Current.FindResource("ActiveItemColor2"));
+            for (int i = 0; i < length; i++)
+            {
+                int minimum = i;
+                for (int j = i + 1; j < length; j++)
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        allGraphItems[i].SetAllColors((Color)Application.Current.FindResource("ActiveItemColor1"));
+                        allGraphItems[j].SetAllColors((Color)Application.Current.FindResource("ActiveItemColor2"));
+                    });
 
-        //                    iValue = (int)allGraphItems[i]._itemValue.Content;
-        //                    jValue = (int)allGraphItems[j]._itemValue.Content;
-        //                });
+                    Thread.Sleep(waitShort * speed);
 
-        //                Thread.Sleep(waitShort * speed);
+                    if (masterArray[j] < masterArray[i])
+                    {
+                        Thread.Sleep(waitShort * speed);
+                        minimum = j;
 
-        //                if (jValue < iValue)
-        //                {
-        //                    Thread.Sleep(waitShort * speed);
-        //                    minimum = j;
+                        masterArray[j] ^= masterArray[i];
+                        masterArray[i] ^= masterArray[j];
+                        masterArray[j] ^= masterArray[i];
 
-        //                    Dispatcher.Invoke(() =>
-        //                    {
-        //                        allGraphItems[i]._itemValue.Content = jValue;
-        //                        allGraphItems[i].SetAllColors((Color)Application.Current.FindResource("ActiveItemColor2"));
-        //                        allGraphItems[i].UpdateBarHeight();
+                        SwapForUI(i, j);
 
-        //                        allGraphItems[j]._itemValue.Content = iValue;
-        //                        allGraphItems[j].SetAllColors((Color)Application.Current.FindResource("ActiveItemColor1"));
-        //                        allGraphItems[j].UpdateBarHeight();
-        //                    });
+                        Thread.Sleep(waitLong * speed);
+                    }
 
-        //                    Thread.Sleep(waitLong * speed);
-        //                }
+                    Dispatcher.Invoke(() =>
+                    {
+                            //Set j to unsorted instead of active.
+                            allGraphItems[j].SetAllColors((Color)Application.Current.FindResource("UnsortedItemColor"));
+                    });
+                }
 
-        //                Dispatcher.Invoke(() =>
-        //                {
-        //                    //Set j to unsorted instead of active.
-        //                    allGraphItems[j].SetAllColors((Color)Application.Current.FindResource("UnsortedItemColor"));
-        //                });
-        //            }
+                Dispatcher.Invoke(() =>
+                {
+                    if (masterArray[i] == i)
+                    {
+                            //If array[i] = i, color sorted
+                            allGraphItems[i].SetAllColors((Color)Application.Current.FindResource("SortedItemColor"));
+                    }
+                    else
+                    {
+                            //Set i to unsorted instead of active.
+                            allGraphItems[i].SetAllColors((Color)Application.Current.FindResource("UnsortedItemColor"));
+                    }
+                });
+            }
+        }
 
-        //            Dispatcher.Invoke(() =>
-        //            {
-        //                if ((int)allGraphItems[i]._itemValue.Content == i)
-        //                {
-        //                    //If array[i] = i, color sorted
-        //                    allGraphItems[i].SetAllColors((Color)Application.Current.FindResource("SortedItemColor"));
-        //                }
-        //                else
-        //                {
-        //                    //Set i to unsorted instead of active.
-        //                    allGraphItems[i].SetAllColors((Color)Application.Current.FindResource("UnsortedItemColor"));
-        //                }
-        //            });
-        //        }
-        //    }
+        public void GraphicalShellSort()
+        {
+            int length = masterArray.Length;
+            int step = 1;
+            HashSet<int> indexesInSet = new HashSet<int>();
 
-        //    public void GraphicalShellSort()
-        //    {
-        //        int length = allGraphItems.Count;
-        //        int step = 1;
-        //        //List<int> indexesInSet = new List<int>();
-        //        HashSet<int> indexesInSet = new HashSet<int>();
+            while (step < length / 3)
+            {
+                //Using Knuth's increment sequence (1, 4, 13, 40, ...)
+                step = 3 * step + 1;
+            }
 
-        //        while (step < length / 3)
-        //        {
-        //            //Using Knuth's increment sequence (1, 4, 13, 40, ...)
-        //            step = 3 * step + 1;
-        //        }
+            while (step >= 1)
+            {
+                for (int i = step; i < length; i++)
+                {
+                    indexesInSet.Add(i);
+                    indexesInSet.Add(i - step);
 
-        //        while (step >= 1)
-        //        {
-        //            for (int i = step; i < length; i++)
-        //            {
-        //                indexesInSet.Add(i);
-        //                indexesInSet.Add(i - step);
+                    Dispatcher.Invoke(() =>
+                    {
+                        allGraphItems[i].SetAllColors((Color)Application.Current.FindResource("ActiveItemColor1"));
+                        allGraphItems[i - step].SetAllColors((Color)Application.Current.FindResource("ActiveItemColor2"));
+                    });
 
-        //                Dispatcher.Invoke(() =>
-        //                {
-        //                    allGraphItems[i].SetAllColors((Color)Application.Current.FindResource("ActiveItemColor1"));
-        //                    allGraphItems[i - step].SetAllColors((Color)Application.Current.FindResource("ActiveItemColor2"));
-        //                });
+                    Thread.Sleep(waitShort * speed);
+                    for (int j = i; j >= step && masterArray[j] < masterArray[j - step]; j -= step)
+                    {
+                        indexesInSet.Add(j - step);
 
-        //                Thread.Sleep(waitShort * speed);
-        //                for (int j = i; j >= step && jIsLess(j); j -= step)
-        //                {
-        //                    indexesInSet.Add(j - step);
+                        masterArray[j - step] ^= masterArray[j];
+                        masterArray[j] ^= masterArray[j - step];
+                        masterArray[j - step] ^= masterArray[j];
 
-        //                    //If not in order swap colors and values
-        //                    Dispatcher.Invoke(() =>
-        //                    {
-        //                        int temp = (int)allGraphItems[j - step]._itemValue.Content;
+                        SwapForUI(j, j - step);
 
-        //                        allGraphItems[j - step]._itemValue.Content = allGraphItems[j]._itemValue.Content;
-        //                        allGraphItems[j - step].SetAllColors((Color)Application.Current.FindResource("ActiveItemColor2"));
-        //                        allGraphItems[j - step].UpdateBarHeight();
+                        //If not in order swap colors and values
+                        //Dispatcher.Invoke(() =>
+                        //{
+                        //    int temp = (int)allGraphItems[j - step]._itemValue.Content;
 
-        //                        allGraphItems[j]._itemValue.Content = temp;
-        //                        allGraphItems[j].SetAllColors((Color)Application.Current.FindResource("ActiveItemColor1"));
-        //                        allGraphItems[j].UpdateBarHeight();
-        //                    });
-        //                    Thread.Sleep(waitLong * speed);
-        //                }
+                        //    allGraphItems[j - step]._itemValue.Content = allGraphItems[j]._itemValue.Content;
+                        //    allGraphItems[j - step].SetAllColors((Color)Application.Current.FindResource("ActiveItemColor2"));
+                        //    allGraphItems[j - step].UpdateBarHeight();
 
-        //                //Reset colors for all examined indexes
-        //                Dispatcher.Invoke(() =>
-        //                {
-        //                    foreach (int x in indexesInSet)
-        //                    {
-        //                        if ((int)allGraphItems[x]._itemValue.Content == x)
-        //                        {
-        //                            allGraphItems[x].SetAllColors((Color)Application.Current.FindResource("SortedItemColor"));
-        //                        }
-        //                        else
-        //                        {
-        //                            allGraphItems[x].SetAllColors((Color)Application.Current.FindResource("UnsortedItemColor"));
-        //                        }
-        //                    }
-        //                });
-        //                indexesInSet.Clear();
-        //            }
-        //            step /= 3;
-        //        }
+                        //    allGraphItems[j]._itemValue.Content = temp;
+                        //    allGraphItems[j].SetAllColors((Color)Application.Current.FindResource("ActiveItemColor1"));
+                        //    allGraphItems[j].UpdateBarHeight();
+                        //});
+                        Thread.Sleep(waitLong * speed);
+                    }
 
-        //        bool jIsLess(int j)
-        //        {
-        //            int iValue = 50; //Dummy value
-        //            int jValue = 50; //Dummy value
+                    //Reset colors for all examined indexes
+                    Dispatcher.Invoke(() =>
+                    {
+                        foreach (int x in indexesInSet)
+                        {
+                            if (masterArray[x] == x)
+                            {
+                                allGraphItems[x].SetAllColors((Color)Application.Current.FindResource("SortedItemColor"));
+                            }
+                            else
+                            {
+                                allGraphItems[x].SetAllColors((Color)Application.Current.FindResource("UnsortedItemColor"));
+                            }
+                        }
+                    });
+                    indexesInSet.Clear();
+                }
+                step /= 3;
+            }
+        }
 
-        //            Dispatcher.Invoke(() =>
-        //            {
-        //                iValue = (int)allGraphItems[j - step]._itemValue.Content;
-        //                jValue = (int)allGraphItems[j]._itemValue.Content;
-        //            });
+        #endregion
 
-        //            return jValue < iValue;
-        //        }
-        //    }
+        #region Sort Helpers
+        private void SwapForUI(int a, int b)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                allGraphItems[a].SetAllColors((Color)Application.Current.FindResource("ActiveItemColor2"));
+                allGraphItems[a].UpdateBarHeight(masterArray[a], maxBarHeight, totalItems);
+                allGraphItems[a].UpdateValue(masterArray[a]);
 
+                allGraphItems[b].SetAllColors((Color)Application.Current.FindResource("ActiveItemColor1"));
+                allGraphItems[b].UpdateBarHeight(masterArray[b], maxBarHeight, totalItems);
+                allGraphItems[b].UpdateValue(masterArray[b]);
+            });
+        }
         #endregion
 
         private void sldrSpeed_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
