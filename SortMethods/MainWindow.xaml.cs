@@ -140,11 +140,17 @@ namespace SortMethods
             Sorts newSort = new Sorts(); //For debugging
             switch (cbSelectSortType.SelectedValue)
             {
+                case SortType.BubbleSort:
+                    {
+                        SwitchTaskFactory(GraphicalBubbleSort);
+                        break;
+                    }
                 case SortType.InsertionSort:
                     {
                         SwitchTaskFactory(GraphicalInsertionSort);
                         break;
                     }
+
                 //case SortType.MergeSort:
                 //    {
                 //        int[] newArray = newSort.MergeSort(masterArray);
@@ -166,6 +172,7 @@ namespace SortMethods
 
                 //        break;
                 //    }
+
                 case SortType.SelectionSort:
                     {
                         SwitchTaskFactory(GraphicalSelectionSort);
@@ -207,6 +214,64 @@ namespace SortMethods
 
         //SORTS WITH SPECIAL STEPS
         #region Sorts
+
+        public void GraphicalBubbleSort()
+        {
+            int length = masterArray.Length;
+            bool swapMade = true;
+
+            while (swapMade)
+            {
+                swapMade = false;
+
+                for (int i = 0; i < length-1; i++)
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        allGraphItems[i].SetAllColors((Color)Application.Current.FindResource("ActiveItemColor1"));
+                        allGraphItems[i+1].SetAllColors((Color)Application.Current.FindResource("ActiveItemColor2"));
+                    });
+
+                    Thread.Sleep(waitShort * speed);
+
+                    if (masterArray[i] > masterArray[i + 1])
+                    {
+                        Thread.Sleep(waitShort * speed);
+
+                        masterArray[i + 1] ^= masterArray[i];
+                        masterArray[i] ^= masterArray[i + 1];
+                        masterArray[i + 1] ^= masterArray[i];
+
+                        SwapForUI(i, i+1);
+
+                        swapMade = true;
+
+                        Thread.Sleep(waitLong * speed);
+                    }
+
+                    Dispatcher.Invoke(() =>
+                    {
+                        if (masterArray[i] == i)
+                        {
+                            allGraphItems[i].SetAllColors((Color)Application.Current.FindResource("SortedItemColor"));
+                        }
+                        else
+                        {
+                            allGraphItems[i].SetAllColors((Color)Application.Current.FindResource("UnsortedItemColor"));
+                        }
+
+                        if (masterArray[i + 1] == i + 1)
+                        {
+                            allGraphItems[i + 1].SetAllColors((Color)Application.Current.FindResource("SortedItemColor"));
+                        }
+                        else
+                        {
+                            allGraphItems[i + 1].SetAllColors((Color)Application.Current.FindResource("UnsortedItemColor"));
+                        }
+                    });
+                }
+            }
+        }
 
         public void GraphicalInsertionSort()
         {
@@ -276,7 +341,6 @@ namespace SortMethods
                 });
             }
         }
-
 
         public void GraphicalSelectionSort()
         {

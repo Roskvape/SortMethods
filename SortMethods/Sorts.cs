@@ -8,6 +8,7 @@ namespace SortMethods
 {
     public enum SortType
     {
+        BubbleSort,
         InsertionSort,
         //MergeSort,
         SelectionSort,
@@ -17,6 +18,32 @@ namespace SortMethods
     //Master copies of original sort methods for reference
     public class Sorts
     {
+
+        public int[] BubbleSort(int[] array)
+        {
+            int length = array.Length;
+            bool swapMade = true;
+
+            while (swapMade)
+            {
+                swapMade = false;
+
+                for (int i = 0; i < length-1; i++)
+                {
+                    if (array[i] > array[i + 1])
+                    {
+                        array[i + 1] ^= array[i];
+                        array[i] ^= array[i + 1];
+                        array[i + 1] ^= array[i];
+
+                        swapMade = true;
+                    }
+                }
+            }
+
+            return array;
+        }
+
         public int[] InsertionSort(int[] array)
         {
             int length = array.Length;
