@@ -39,8 +39,8 @@ namespace SortMethods
 
             ResetAllBarColors();
             ShuffleArray();
-            UpdateValues();
-            UpdateAllBarHeights();
+            //UpdateValues();
+            //UpdateAllBarHeights();
         }
 
         public void InitializeAllGraphItems()
@@ -82,6 +82,15 @@ namespace SortMethods
                     masterArray[k] ^= masterArray[n];
                 }
             }
+
+            Task.Factory.StartNew(() =>
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    UpdateValues();
+                    UpdateAllBarHeights();
+                });
+            });
         }
 
         public void ReverseValues()
@@ -148,6 +157,12 @@ namespace SortMethods
                 case SortType.InsertionSort:
                     {
                         SwitchTaskFactory(GraphicalInsertionSort);
+                        break;
+                    }
+
+                case SortType.QuickSort:
+                    {
+                        SwitchTaskFactory(GraphicalQuickSort);
                         break;
                     }
 
@@ -270,6 +285,111 @@ namespace SortMethods
                         }
                     });
                 }
+            }
+        }
+
+        public void GraphicalQuickSort()
+        {
+            ShuffleArray();
+
+            Dispatcher.Invoke(() =>
+            {
+                foreach (GraphItem item in allGraphItems)
+                {
+                    item.SetAllColors((Color)Application.Current.FindResource("ActiveItemColor1")); 
+                }
+            });
+
+            Thread.Sleep(waitShort * speed);
+
+            QuickSort_Sort(masterArray, 0, masterArray.Length - 1);
+
+            void QuickSort_Sort(int[] subarray, int lo, int hi)
+            {
+                if (hi <= lo)
+                {
+                    return;
+                }
+
+                int j = QuickSort_Partition(subarray, lo, hi);
+
+                Dispatcher.Invoke(() =>
+                {
+                    for (int i = lo; i < j - 1; i++)
+                    {
+                        allGraphItems[i].SetAllColors((Color)Application.Current.FindResource("ActiveItemColor1"));
+                    }
+
+                    for (int i = j + 1 ; i <= hi; i++)
+                    {
+                        allGraphItems[i].SetAllColors((Color)Application.Current.FindResource("ActiveItemColor2"));
+                    }
+                });
+
+                Thread.Sleep(waitShort * speed);
+
+                QuickSort_Sort(subarray, lo, j - 1);
+
+                Dispatcher.Invoke(() =>
+                {
+                    for (int i = lo; i < j - 1; i++)
+                    {
+                        allGraphItems[i].SetAllColors((Color)Application.Current.FindResource("ActiveItemColor2"));
+                    }
+
+                    for (int i = j + 1; i <= hi; i++)
+                    {
+                        allGraphItems[i].SetAllColors((Color)Application.Current.FindResource("ActiveItemColor1"));
+                    }
+                });
+
+                Thread.Sleep(waitShort * speed);
+
+                QuickSort_Sort(subarray, j + 1, hi);
+            }
+
+            int QuickSort_Partition(int[] subarray, int lo, int hi)
+            {
+                int i = lo;
+                int j = hi + 1;
+                int v = subarray[lo];
+
+                while (true)
+                {
+                    while (subarray[++i] < v)
+                    {
+                        if (i == hi)
+                        {
+                            break;
+                        }
+                    }
+                    while (v < subarray[--j])
+                    {
+                        if (j == lo)
+                        {
+                            break;
+                        }
+                    }
+
+                    if (i >= j)
+                    {
+                        break;
+                    }
+
+                    int temp = masterArray[j];
+                    masterArray[j] = masterArray[i];
+                    masterArray[i] = temp;
+
+                    SwapForUI(j, i);
+                }
+
+                int temp2 = masterArray[j];
+                masterArray[j] = masterArray[lo];
+                masterArray[lo] = temp2;
+
+                SwapForUI(j, lo);
+
+                return j;
             }
         }
 

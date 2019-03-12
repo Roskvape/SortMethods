@@ -10,6 +10,7 @@ namespace SortMethods
     {
         BubbleSort,
         InsertionSort,
+        QuickSort,
         //MergeSort,
         SelectionSort,
         ShellSort
@@ -63,6 +64,67 @@ namespace SortMethods
                         break;
                     }
                 }
+            }
+
+            return array;
+        }
+
+        public int[] QuickSort(int[] array)
+        {
+            array = ShuffleArray(array);
+
+            QuickSort_Sort(array, 0, array.Length - 1);
+
+            void QuickSort_Sort(int[] subarray, int lo, int hi)
+            {
+                if (hi <= lo)
+                {
+                    return;
+                }
+
+                int j = QuickSort_Partition(subarray, lo, hi);
+                QuickSort_Sort(subarray, lo, j - 1);
+                QuickSort_Sort(subarray, j + 1, hi);
+            }
+
+            int QuickSort_Partition(int[] subarray, int lo, int hi)
+            {
+                int i = lo;
+                int j = hi + 1;
+                int v = subarray[lo];
+
+                while (true)
+                {
+                    while (subarray[++i] < v)
+                    {
+                        if (i == hi)
+                        {
+                            break;
+                        }
+                    }
+                    while (v < subarray[--j])
+                    {
+                        if (j == lo)
+                        {
+                            break;
+                        }
+                    }
+
+                    if (i >= j)
+                    {
+                        break;
+                    }
+
+                    int temp = array[j];
+                    array[j] = array[i];
+                    array[i] = temp;
+                }
+
+                int temp2 = array[j];
+                array[j] = array[lo];
+                array[lo] = temp2;
+
+                return j;
             }
 
             return array;
@@ -268,6 +330,27 @@ namespace SortMethods
                     step /= 3;
                 }
                 
+            return array;
+        }
+
+        // Helpers
+
+        public int[] ShuffleArray(int[] array)
+        {
+            int n = array.Length;
+            while (n > 1)
+            {
+                n--;
+                int k = ThreadSafeRandom.ThisThreadsRandom.Next(n + 1);
+
+                if (k != n) //If k = n, bitwise swap would result in 0, so skip.
+                {
+                    array[k] ^= array[n];
+                    array[n] ^= array[k];
+                    array[k] ^= array[n];
+                }
+            }
+
             return array;
         }
     }
