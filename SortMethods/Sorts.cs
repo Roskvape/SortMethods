@@ -102,6 +102,7 @@ namespace SortMethods
                             break;
                         }
                     }
+
                     while (v < subarray[--j])
                     {
                         if (j == lo)

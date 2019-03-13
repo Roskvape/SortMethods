@@ -6,4 +6,5 @@
     <Color x:Key="UnvisitedItemColor">#FFDED8C9</Color>
     <Color x:Key="ActiveItemColor1">#FFF9DF97</Color>
     <Color x:Key="ActiveItemColor2">#FFE2A80C</Color>
+    <Color x:Key="PartitionItemColor">#000000</Color>
 </ResourceDictionary>

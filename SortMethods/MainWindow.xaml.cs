@@ -159,7 +159,6 @@ namespace SortMethods
                         SwitchTaskFactory(GraphicalInsertionSort);
                         break;
                     }
-
                 case SortType.QuickSort:
                     {
                         SwitchTaskFactory(GraphicalQuickSort);
@@ -227,7 +226,7 @@ namespace SortMethods
             }
         }
 
-        //SORTS WITH SPECIAL STEPS
+        // SORTS WITH STEPS TO UPDATE UI
         #region Sorts
 
         public void GraphicalBubbleSort()
@@ -308,6 +307,12 @@ namespace SortMethods
             {
                 if (hi <= lo)
                 {
+                    Dispatcher.Invoke(() =>
+                    {
+                            allGraphItems[hi].SetAllColors((Color)Application.Current.FindResource("SortedItemColor"));
+                    });
+
+                    Thread.Sleep(waitShort * speed);
                     return;
                 }
 
@@ -388,6 +393,11 @@ namespace SortMethods
                 masterArray[lo] = temp2;
 
                 SwapForUI(j, lo);
+
+                Dispatcher.Invoke(() =>
+                {
+                    allGraphItems[j].SetAllColors((Color)Application.Current.FindResource("PartitionItemColor"));
+                });
 
                 return j;
             }
